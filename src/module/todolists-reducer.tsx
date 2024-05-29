@@ -6,8 +6,9 @@ export type TodolistType = {
     title: string
 }
 
+const initialState: Array<TodolistType> = []
 
-export const todolistsReducer = (state: TodolistType[], action: todolistsReducerActionsType): TodolistType[] => {
+export const todolistsReducer = (state: Array<TodolistType> = [] = initialState , action: todolistsReducerActionsType): TodolistType[] => {
     switch (action.type) {
         case 'REMOVE-TODOLIST': {
             return state.filter(t => t.id !== action.payload.todolistID)
@@ -15,7 +16,7 @@ export const todolistsReducer = (state: TodolistType[], action: todolistsReducer
 
         case 'ADD-TODOLIST': {
             const newTodolist = {id: action.payload.todolistID, title: action.payload.title}
-            return [ ...state, newTodolist]
+            return [newTodolist, ...state]
             // remember to add new array for tasks (think how u can do it)
         }
 

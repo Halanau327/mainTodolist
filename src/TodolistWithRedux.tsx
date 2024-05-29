@@ -5,23 +5,33 @@ import {EditableSpan} from "./EditableSpan";
 import IconButton from '@mui/material/IconButton/IconButton';
 import {Delete} from "@mui/icons-material";
 import {Button, Checkbox} from "@mui/material";
+import {useSelector} from "react-redux";
+import {AppRootStateType} from "./module/store";
+import {TodolistType} from "./module/todolists-reducer";
 
 type TodolistPropsType = {
-	tasks: TaskType[]
-	title: string
-	removeTask: (todolistID: string, taskID: string) => void
-	addTask: (title: string, todolistID: string) => void
-	todolistID: string
-	removeTodolist: (todolistID: string) => void
-	changeTodolistTitle: (todolistID: string, title: string) => void
-	changeTaskTitle:(todolistID: string, taskID: string, title: string) => void
-	changeTaskStatus:(todolistID: string, taskID: string, newTitle: boolean) => void
+	todolist: TodolistType
 }
 
 type FilterValueType = 'all' | 'active' | 'completed'
 
 
-export const Todolist = ({todolistID, tasks, title, removeTask, addTask, changeTaskTitle, changeTaskStatus, removeTodolist, changeTodolistTitle}: TodolistPropsType) => {
+// зачем redux
+// flux архитектура
+// объект store
+// принципы redux
+// как библиотека react с redux связываются
+// хуки useSelector и useDispatch
+
+export const TodolistWithRedux = ({todolist}: TodolistPropsType) => {
+
+	const {id, title, filter} = todolist
+
+
+	const tasks = useSelector<AppRootStateType, Array<TaskType>>(state => state.tasks[id])
+
+
+
 	const [filter, setFilter] = useState<FilterValueType>('all')
 
 	let tasksForTodolist = tasks
