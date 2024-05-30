@@ -1,13 +1,13 @@
 import React, {ChangeEvent, useState} from "react";
-import {TaskType} from "./module/tasks-reducer";
+import {AddTaskAC, ChangeTaskStatusAC, ChangeTaskTitleAC, RemoveTaskAC, TaskType} from "./module/tasks-reducer";
 import {AddItemForm} from "./AddItemForm";
 import {EditableSpan} from "./EditableSpan";
 import IconButton from '@mui/material/IconButton/IconButton';
 import {Delete} from "@mui/icons-material";
 import {Button, Checkbox} from "@mui/material";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "./module/store";
-import {TodolistType} from "./module/todolists-reducer";
+import {RemoveTodolistAC, TodolistType, UpdateTodolistAC} from "./module/todolists-reducer";
 
 type TodolistPropsType = {
 	todolist: TodolistType
@@ -23,14 +23,14 @@ type FilterValueType = 'all' | 'active' | 'completed'
 // как библиотека react с redux связываются
 // хуки useSelector и useDispatch
 
-export const TodolistWithRedux = ({todolist}: TodolistPropsType) => {
+export const TodolistWithRedux = ({ todolist }: TodolistPropsType) => {
 
-	const {id, title, filter} = todolist
+	const {id, title} = todolist
 
 
 	const tasks = useSelector<AppRootStateType, Array<TaskType>>(state => state.tasks[id])
 
-
+	const dispatch = useDispatch()
 
 	const [filter, setFilter] = useState<FilterValueType>('all')
 
@@ -49,15 +49,15 @@ export const TodolistWithRedux = ({todolist}: TodolistPropsType) => {
 	}
 
 	const addTaskHandler = (title: string) => {
-		addTask(title, todolistID)
+		dispatch(AddTaskAC(title, id))
 	}
 
 	const removeTodolistHandler = () => {
-		removeTodolist(todolistID)
+		dispatch(RemoveTodolistAC(id))
 	}
 
 	const changeTodolistTitleHandler = (title: string) => {
-		changeTodolistTitle(todolistID, title)
+		dispatch(UpdateTodolistAC(id, title))
 	}
 
 	return (
@@ -75,16 +75,16 @@ export const TodolistWithRedux = ({todolist}: TodolistPropsType) => {
 			{tasksForTodolist.map(t => {
 
 				const removeTaskHandler = () => {
-					removeTask(todolistID, t.id)
+					dispatch(RemoveTaskAC(id, t.id))
 				}
 
 				const changeTaskTitleHandler = (title: string) => {
-					changeTaskTitle(todolistID, t.id, title)
+					dispatch(ChangeTaskTitleAC(id, t.id, title))
 				}
 
 				const changeTaskStatusHandler = (e: ChangeEvent<HTMLInputElement>) => {
 					let newIsDoneValue = e.currentTarget.checked;
-					changeTaskStatus(todolistID, t.id, newIsDoneValue)
+					dispatch(ChangeTaskStatusAC(id, t.id, newIsDoneValue))
 				}
 
 				return (

@@ -22,13 +22,10 @@ import {Button, Container, Grid, IconButton, Paper, Toolbar, Typography} from "@
 import {Menu} from "@mui/icons-material";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "./module/store";
+import {TodolistWithRedux} from "./TodolistWithRedux";
 
 
 function AppWithRedux() {
-
-	let todolistID1 = v1()
-	let todolistID2 = v1()
-
 
 	let todolists = useSelector<AppRootStateType, Array<TodolistType>>(state => state.todolists)
 
@@ -45,13 +42,11 @@ function AppWithRedux() {
 	}
 
 	const changeTaskTitle = (todolistID: string, taskID: string, title: string) => {
-		const action = ChangeTaskTitleAC(todolistID, taskID, title)
-		dispatch(action)
+		dispatch(ChangeTaskTitleAC(todolistID, taskID, title))
 	}
 
 	const changeTaskStatus = (todolistID: string, taskID: string, taskStatus: boolean) => {
-		const action = ChangeTaskStatusAC(todolistID, taskID, taskStatus)
-		dispatch(action)
+		dispatch(ChangeTaskStatusAC(todolistID, taskID, taskStatus))
 	}
 
 
@@ -65,8 +60,7 @@ function AppWithRedux() {
 	};
 
 	const changeTodolistTitle = (todolistID: string, title: string) => {
-		const action = UpdateTodolistAC(todolistID, title)
-			dispatch(action)
+			dispatch(UpdateTodolistAC(todolistID, title))
 		}
 
 
@@ -93,18 +87,7 @@ function AppWithRedux() {
 
 						return <Grid key={tl.id} item>
 							<Paper style={{padding: "10px"}}>
-								<Todolist
-									key={tl.id}
-									todolistID={tl.id}
-									title={tl.title}
-									tasks={tasks[tl.id]}
-									removeTask={removeTask}
-									addTask={addTask}
-									changeTaskTitle={changeTaskTitle}
-									changeTaskStatus={changeTaskStatus}
-									removeTodolist={removeTodolist}
-									changeTodolistTitle={changeTodolistTitle}
-								/>
+								<TodolistWithRedux todolist={tl}/>
 							</Paper>
 						</Grid>
 					})
