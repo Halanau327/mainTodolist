@@ -22,7 +22,7 @@ import {Button, Container, Grid, IconButton, Paper, Toolbar, Typography} from "@
 import {Menu} from "@mui/icons-material";
 
 
-function AppWithReducer() {
+function AppWithReducers() {
 
 	let todolistID1 = v1()
 	let todolistID2 = v1()
@@ -131,4 +131,4 @@ function AppWithReducer() {
 	);
 }
 
-export default AppWithReducer;
+export default AppWithReducers;
