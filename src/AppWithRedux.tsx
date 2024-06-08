@@ -26,43 +26,13 @@ import {TodolistWithRedux} from "./TodolistWithRedux";
 
 
 function AppWithRedux() {
-
 	let todolists = useSelector<AppRootStateType, Array<TodolistType>>(state => state.todolists)
-
-	let tasks = useSelector<AppRootStateType, TasksStateType>(state => state.tasks)
 
 	const dispatch = useDispatch()
 
-	const removeTask = (todolistID: string, taskID: string) => {
-		dispatch(RemoveTaskAC(todolistID, taskID))
-	}
-
-	const addTask = (title: string, todolistID: string) => {
-		dispatch(AddTaskAC(title, todolistID))
-	}
-
-	const changeTaskTitle = (todolistID: string, taskID: string, title: string) => {
-		dispatch(ChangeTaskTitleAC(todolistID, taskID, title))
-	}
-
-	const changeTaskStatus = (todolistID: string, taskID: string, taskStatus: boolean) => {
-		dispatch(ChangeTaskStatusAC(todolistID, taskID, taskStatus))
-	}
-
-
-	const removeTodolist = (todolistID: string) => {
-		dispatch(RemoveTodolistAC(todolistID));
-	}
-
 	const addTodolist = (title: string) => {
 		dispatch(AddTodolistAC(title));
-
 	};
-
-	const changeTodolistTitle = (todolistID: string, title: string) => {
-			dispatch(UpdateTodolistAC(todolistID, title))
-		}
-
 
 	return (
 		<div className="App">

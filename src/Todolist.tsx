@@ -5,6 +5,7 @@ import {EditableSpan} from "./EditableSpan";
 import IconButton from '@mui/material/IconButton/IconButton';
 import {Delete} from "@mui/icons-material";
 import {Button, Checkbox} from "@mui/material";
+import {FilterValuesType} from "./App";
 
 type TodolistPropsType = {
 	tasks: TaskType[]
@@ -16,27 +17,11 @@ type TodolistPropsType = {
 	changeTodolistTitle: (todolistID: string, title: string) => void
 	changeTaskTitle:(todolistID: string, taskID: string, title: string) => void
 	changeTaskStatus:(todolistID: string, taskID: string, newTitle: boolean) => void
+	changeFilter:(todolistID: string, value: FilterValuesType) => void
+	filter: FilterValuesType
 }
 
-type FilterValueType = 'all' | 'active' | 'completed'
-
-
-export const Todolist = ({todolistID, tasks, title, removeTask, addTask, changeTaskTitle, changeTaskStatus, removeTodolist, changeTodolistTitle}: TodolistPropsType) => {
-	const [filter, setFilter] = useState<FilterValueType>('all')
-
-	let tasksForTodolist = tasks
-
-	if (filter === 'active') {
-		tasksForTodolist = tasks.filter(f => !f.isDone)
-	}
-
-	if (filter === 'completed') {
-		tasksForTodolist = tasks.filter(f => f.isDone)
-	}
-
-	const changeFilterTasksHandler = (filter: FilterValueType) => {
-		setFilter(filter)
-	}
+export const Todolist = ({todolistID, tasks, title,filter, removeTask, addTask, changeTaskTitle, changeTaskStatus, changeFilter, removeTodolist, changeTodolistTitle}: TodolistPropsType) => {
 
 	const addTaskHandler = (title: string) => {
 		addTask(title, todolistID)
@@ -50,6 +35,10 @@ export const Todolist = ({todolistID, tasks, title, removeTask, addTask, changeT
 		changeTodolistTitle(todolistID, title)
 	}
 
+	const onAllClickHandler = () => changeFilter(todolistID, 'all');
+	const onActiveClickHandler = () => changeFilter(todolistID, 'active');
+	const onCompletedClickHandler = () => changeFilter(todolistID, 'completed');
+
 	return (
 		<div>
 			<div>
@@ -62,7 +51,7 @@ export const Todolist = ({todolistID, tasks, title, removeTask, addTask, changeT
 				<AddItemForm addItem={addTaskHandler}/>
 
 			</div>
-			{tasksForTodolist.map(t => {
+			{tasks.map(t => {
 
 				const removeTaskHandler = () => {
 					removeTask(todolistID, t.id)
@@ -94,15 +83,15 @@ export const Todolist = ({todolistID, tasks, title, removeTask, addTask, changeT
 			})
 			}
 			<div>
-				<Button onClick={() => changeFilterTasksHandler('all')}
+				<Button onClick={onAllClickHandler}
 						color={'inherit'}
 						variant={filter === 'all' ? 'outlined' : 'text'}
 				>All</Button>
-				<Button onClick={() => changeFilterTasksHandler('active')}
+				<Button onClick={onActiveClickHandler}
 						color={'primary'}
 						variant={filter === 'active' ? 'outlined' : 'text'}
 				>Active</Button>
-				<Button onClick={() => changeFilterTasksHandler('completed')}
+				<Button onClick={onCompletedClickHandler}
 						color={'secondary'}
 						variant={filter === 'completed' ? 'outlined' : 'text'}
 				>Completed</Button>

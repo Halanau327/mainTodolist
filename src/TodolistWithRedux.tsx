@@ -34,16 +34,6 @@ export const TodolistWithRedux = ({ todolist }: TodolistPropsType) => {
 
 	const [filter, setFilter] = useState<FilterValueType>('all')
 
-	let tasksForTodolist = tasks
-
-	if (filter === 'active') {
-		tasksForTodolist = tasks.filter(f => !f.isDone)
-	}
-
-	if (filter === 'completed') {
-		tasksForTodolist = tasks.filter(f => f.isDone)
-	}
-
 	const changeFilterTasksHandler = (filter: FilterValueType) => {
 		setFilter(filter)
 	}
@@ -58,6 +48,16 @@ export const TodolistWithRedux = ({ todolist }: TodolistPropsType) => {
 
 	const changeTodolistTitleHandler = (title: string) => {
 		dispatch(UpdateTodolistAC(id, title))
+	}
+
+	let tasksForTodolist = tasks
+
+	if (filter === 'active') {
+		tasksForTodolist = tasks.filter(f => !f.isDone)
+	}
+
+	if (filter === 'completed') {
+		tasksForTodolist = tasks.filter(f => f.isDone)
 	}
 
 	return (
@@ -120,5 +120,3 @@ export const TodolistWithRedux = ({ todolist }: TodolistPropsType) => {
 		</div>
 	)
 }
-
-
