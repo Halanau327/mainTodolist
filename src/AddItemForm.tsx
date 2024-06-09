@@ -1,4 +1,3 @@
-import {Button} from "./Button";
 import React, {ChangeEvent ,KeyboardEvent, useState} from "react";
 import {IconButton, TextField} from "@mui/material";
 import {AddBox} from "@mui/icons-material";
@@ -9,7 +8,8 @@ type AddItemFormPropsType = {
 
 };
 
-export const AddItemForm = ({addItem}: AddItemFormPropsType) => {
+export const AddItemForm = React.memo(({addItem}: AddItemFormPropsType) => {
+    console.log('AddItemFormCalled')
     const [title, setTitle] = useState('')
     const [error, setError] = useState<string | null>(null)
 
@@ -26,7 +26,10 @@ export const AddItemForm = ({addItem}: AddItemFormPropsType) => {
         setTitle(e.currentTarget.value)
     }
 
-    const addItemOnKeyUpHandler = (e:KeyboardEvent<HTMLInputElement>) => {
+    const addItemOnKeyUpHandler = (e: KeyboardEvent<HTMLInputElement>) => {
+        if (error !== null) {
+            setError(null)
+        }
         if (e.key === 'Enter') {
             addItemHandler()
         }
@@ -46,4 +49,4 @@ export const AddItemForm = ({addItem}: AddItemFormPropsType) => {
             <AddBox/>
         </IconButton>
     </div>
-};
+});

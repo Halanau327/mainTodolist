@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useState} from "react";
+import React, {ChangeEvent, useCallback} from "react";
 import {AddTaskAC, ChangeTaskStatusAC, ChangeTaskTitleAC, RemoveTaskAC, TaskType} from "./module/tasks-reducer";
 import {AddItemForm} from "./AddItemForm";
 import {EditableSpan} from "./EditableSpan";
@@ -7,48 +7,45 @@ import {Delete} from "@mui/icons-material";
 import {Button, Checkbox} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "./module/store";
-import {RemoveTodolistAC, TodolistType, UpdateTodolistAC} from "./module/todolists-reducer";
+import {ChangeTodolistFilterAC, RemoveTodolistAC, TodolistType, UpdateTodolistAC} from "./module/todolists-reducer";
+import {Task} from "./Task";
 
 type TodolistPropsType = {
 	todolist: TodolistType
 }
 
-type FilterValueType = 'all' | 'active' | 'completed'
+export const TodolistWithRedux = React.memo(({ todolist }: TodolistPropsType) => {
+	console.log("Todolist called")
 
-
-// зачем redux
-// flux архитектура
-// объект store
-// принципы redux
-// как библиотека react с redux связываются
-// хуки useSelector и useDispatch
-
-export const TodolistWithRedux = ({ todolist }: TodolistPropsType) => {
-
-	const {id, title} = todolist
-
+	const {id, title, filter} = todolist
 
 	const tasks = useSelector<AppRootStateType, Array<TaskType>>(state => state.tasks[id])
 
 	const dispatch = useDispatch()
 
-	const [filter, setFilter] = useState<FilterValueType>('all')
-
-	const changeFilterTasksHandler = (filter: FilterValueType) => {
-		setFilter(filter)
-	}
-
-	const addTaskHandler = (title: string) => {
+	const addTaskHandler = useCallback((title: string) => {
 		dispatch(AddTaskAC(title, id))
-	}
+	}, [])
 
-	const removeTodolistHandler = () => {
+	const removeTodolistHandler = useCallback(() => {
 		dispatch(RemoveTodolistAC(id))
-	}
+	},[])
 
-	const changeTodolistTitleHandler = (title: string) => {
+	const changeTodolistTitleHandler = useCallback((title: string) => {
 		dispatch(UpdateTodolistAC(id, title))
-	}
+	},[]);
+
+	const onAllClickHandler = useCallback(() => {
+		dispatch(ChangeTodolistFilterAC(id, 'all'))
+	}, [])
+
+	const onActiveClickHandler = useCallback(() => {
+		dispatch(ChangeTodolistFilterAC(id, 'active'))
+	}, [])
+
+	const onCompletedClickHandler = useCallback(() => {
+		dispatch(ChangeTodolistFilterAC(id, 'completed'))
+	}, [])
 
 	let tasksForTodolist = tasks
 
@@ -74,49 +71,41 @@ export const TodolistWithRedux = ({ todolist }: TodolistPropsType) => {
 			</div>
 			{tasksForTodolist.map(t => {
 
-				const removeTaskHandler = () => {
-					dispatch(RemoveTaskAC(id, t.id))
-				}
-
-				const changeTaskTitleHandler = (title: string) => {
-					dispatch(ChangeTaskTitleAC(id, t.id, title))
-				}
-
-				const changeTaskStatusHandler = (e: ChangeEvent<HTMLInputElement>) => {
-					let newIsDoneValue = e.currentTarget.checked;
-					dispatch(ChangeTaskStatusAC(id, t.id, newIsDoneValue))
-				}
-
 				return (
 					<div key={t.id}>
-						<Checkbox
-							checked={t.isDone}
-							color="primary"
-							onChange={changeTaskStatusHandler}
+						<Task todolistID={id}
+							  taskID={t.id}
+							  isDone={t.isDone}
+							  title={t.title}
 						/>
-
-						<EditableSpan value={t.title} onChange={changeTaskTitleHandler}/>
-						<IconButton onClick={removeTaskHandler}>
-							<Delete/>
-						</IconButton>
 					</div>
 				)
 			})
 			}
 			<div>
-				<Button onClick={() => changeFilterTasksHandler('all')}
+				<Button onClick={onAllClickHandler}
 						color={'inherit'}
 						variant={filter === 'all' ? 'outlined' : 'text'}
 				>All</Button>
-				<Button onClick={() => changeFilterTasksHandler('active')}
+				<Button onClick={onActiveClickHandler}
 						color={'primary'}
 						variant={filter === 'active' ? 'outlined' : 'text'}
 				>Active</Button>
-				<Button onClick={() => changeFilterTasksHandler('completed')}
+				<Button onClick={onCompletedClickHandler}
 						color={'secondary'}
 						variant={filter === 'completed' ? 'outlined' : 'text'}
 				>Completed</Button>
 			</div>
 		</div>
 	)
-}
+})
+
+
+
+
+// зачем redux
+// flux архитектура
+// объект store
+// принципы redux
+// как библиотека react с redux связываются
+// хуки useSelector и useDispatch
