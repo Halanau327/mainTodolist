@@ -8,7 +8,7 @@ import {Button} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "./module/store";
 import {ChangeTodolistFilterAC, RemoveTodolistAC, TodolistType, UpdateTodolistAC} from "./module/todolists-reducer";
-import {Task} from "./Task";
+import {TaskWithRedux} from "./TaskWithRedux";
 
 type TodolistPropsType = {
 	todolist: TodolistType
@@ -73,10 +73,10 @@ export const TodolistWithRedux = React.memo(({ todolist }: TodolistPropsType) =>
 
 				return (
 					<div key={t.id}>
-						<Task todolistID={id}
-							  taskID={t.id}
-							  isDone={t.isDone}
-							  title={t.title}
+						<TaskWithRedux todolistID={id}
+									   taskID={t.id}
+									   isDone={t.isDone}
+									   title={t.title}
 						/>
 					</div>
 				)
