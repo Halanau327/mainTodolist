@@ -74,10 +74,7 @@ export const TodolistWithRedux = React.memo(({ todolist }: TodolistPropsType) =>
 				return (
 					<div key={t.id}>
 						<TaskWithRedux todolistID={id}
-									   taskID={t.id}
-									   isDone={t.isDone}
-									   title={t.title}
-						/>
+									   task={t}/>
 					</div>
 				)
 			})
